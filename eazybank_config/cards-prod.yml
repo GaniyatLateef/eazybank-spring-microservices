@@ -1,0 +1,11 @@
+build:
+  version: "1.0"
+
+cards:
+  message: "Welcome to EazyBank cards-related prod APIs"
+  contactDetails:
+    name:  "Sandra Chloe - Product owner"
+    email: "{cipher}9183b6c0e9bdc4fd246c80f23d75fcbd2bf6a91a83d375ae96209bc4ef67b624e09c52453f320f41d42f28ab2cc5bdb8"
+  onCallSupport:
+    - (617) 432-2356
+    - (936) 564-8721

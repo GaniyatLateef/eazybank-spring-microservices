@@ -1,0 +1,13 @@
+#default
+build:
+  version: "3.0"
+
+accounts:
+  message: "Welcome to EazyBank accounts related docker APIs"
+  contactDetails:
+    name: "Ganiyat - Developer"
+    email: "{cipher}ff264adfdf443cd95bb4220cea8738da42f7bfbb3979a26001b901c41d05ec3c5c995129d4e48c04504fbd8e19ee4221"
+  onCallSupport:
+    -(+61) 467-****
+
+

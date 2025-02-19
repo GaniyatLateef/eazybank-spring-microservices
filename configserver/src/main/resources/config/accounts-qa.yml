@@ -1,0 +1,10 @@
+build:
+  version: "2.0"
+
+accounts:
+  message: "Welcome to EazyBank accounts related QA APIs"
+  contactDetails:
+    name: "Smith Joe - QA Lead"
+    email: "smith@eazybank.com"
+  onCallSupport:
+    -(+61) 555-6666

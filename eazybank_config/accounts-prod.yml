@@ -1,0 +1,10 @@
+build:
+  version: "1.0"
+
+accounts:
+  message: "Welcome to EazyBank accounts-related production APIs"
+  contactDetails:
+    name: "John Doe - Product owner"
+    email: "{cipher}bdd3b1db0784b20b58c596cb9987ae96aeea48723d912b723b0c65859e51f397a83c8fd31a9685a8548e1fafdd003afd"
+  onCallSupport:
+    -(+61) 666-7890

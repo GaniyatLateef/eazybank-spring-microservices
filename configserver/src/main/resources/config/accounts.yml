@@ -1,0 +1,13 @@
+#default
+build:
+  version: "3.0"
+
+accounts:
+  message: "Welcome to EazyBank accounts related local APIs"
+  contactDetails:
+    name: "Ganiyat - Developer"
+    email: "ganiyat1425@gmail.com"
+  onCallSupport:
+    -(+61) 467-****
+
+
