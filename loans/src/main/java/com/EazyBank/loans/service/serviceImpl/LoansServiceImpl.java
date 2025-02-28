@@ -18,7 +18,7 @@ import java.util.Random;
 @AllArgsConstructor
 public class LoansServiceImpl implements LoansService {
 
-    private LoansRepository loansRepository;
+    private final LoansRepository loansRepository;
 
     @Override
     public void createLoan(String mobileNumber) {
