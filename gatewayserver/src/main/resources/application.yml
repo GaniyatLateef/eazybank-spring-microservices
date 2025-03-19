@@ -11,7 +11,7 @@ spring:
           lower-case-service-id: true      # accepts lower case instead of upper case in the gateway url
       httpclient:               # time out configuration
         connect-timeout: 1000
-        response-timeout: 2s
+        response-timeout: 10s
   data:
     redis:
       connect-timeout: 2s
