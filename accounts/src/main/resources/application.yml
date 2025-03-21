@@ -14,11 +14,6 @@ spring:
 
   config:
     import: "optional:configserver:http://localhost:8071/"
-  #rabbitmq:
-   # host: "localhost"
-    #port: 5672
-    #username: "guest"
-    #password: "guest"
   cloud:
     config:
       circuitbreaker:
@@ -43,6 +38,9 @@ management:
   info:
     env:
       enabled: true
+  metrics:
+    tags:
+      application: I${spring.application.name}
 
 eureka:
   instance:
@@ -64,6 +62,8 @@ logging:
     com:
       eazybank:
         accounts: DEBUG
+  pattern:
+    level: "%5p[${spring.application.name},%X{trace_id}, %X{span_id}]"  # pattern[tag, trace_id, span_id]
 
 resilience4j:
   circuitbreaker:
