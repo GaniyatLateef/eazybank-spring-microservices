@@ -2,25 +2,16 @@ spring:
   application:
     name: "configserver"
   profiles:
-    #active: native
     active: git
   cloud:
     config:
       server:
-        #native:
-         # search-locations: "classpath:/config"   #reading from file
-        #search-locations: "file:///C://dev//eazybank//config"
         git:
           uri: "https://github.com/GaniyatLateef/eazybank_config.git"
           default-label: main
           timeout: 5
           clone-on-start: true
           force-pull: true
-  #rabbitmq:
-   # host: "localhost"   # removing rabbitmq because we are moving to Mysql DB
-   # port: 5672
-    #username: "guest"
-    #password: "guest"
 management:
   endpoints:
     web:
@@ -35,6 +26,9 @@ management:
     health:
       probes:
         enabled: true
+  metrics:
+    tags:
+      application: I${spring.application.name}
 
 encrypt:
   key: "45D81EC1EF61DF9AD8D3E5BB39FF9"

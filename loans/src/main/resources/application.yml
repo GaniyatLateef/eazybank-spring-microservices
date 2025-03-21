@@ -17,12 +17,6 @@ spring:
 
   config:
     import: "optional:configserver:http://localhost:8071/"
- # rabbitmq:
-  #  host: "localhost"
-   # port: 5672
-    #username: "guest"
-    #password: "guest"
-
 management:
   endpoints:
     web:
@@ -42,6 +36,9 @@ management:
   info:
     env:
       enabled: true
+  metrics:
+    tags:
+      application: I${spring.application.name}
 
 eureka:
   instance:
