@@ -15,9 +15,27 @@ spring:
   config:
     import: "optional:configserver:http://localhost:8071/"
   cloud:
+    function:
+      definition: updateCommunication
+    stream:
+      bindings:
+        updateCommunication-in-0:
+          destination: communication-sent
+          group: ${spring.application.name}
+        sendCommunication-out-0:
+          destination: send-communication
     config:
       circuitbreaker:
-        enabled: true
+        group:
+          enabled:
+            circuitbreaker:
+                    enabled: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    connection-timeout: 10s
 
 management:
   endpoints:

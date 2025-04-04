@@ -34,6 +34,22 @@ services:
       file: common-config.yml
       service: microservice-db-config
 
+  rabbit:
+    image: rabbitmq:4.0-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
   keycloak:
     image: quay.io/keycloak/keycloak:22.0.1
     container_name: keycloak
@@ -41,7 +57,7 @@ services:
       - "7080:8080"
     environment:
       KEYCLOAK_ADMIN: "admin"
-      KEYCLOAK_ADMIN_PASSWORD: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "ganiyat"
     command: "start-dev"
     extends:
       file: common-config.yml
@@ -263,7 +279,7 @@ services:
       service: network-deploy-service
 
   configserver:
-    image: "galatex/configserver:8.0"
+    image: "galatex/configserver:9.0"
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -280,7 +296,7 @@ services:
       OTEL_SERVICE_NAME: "configserver"
 
   eurekaserver:
-    image: "galatex/eurekaserver:8.0"
+    image: "galatex/eurekaserver:9.0"
     container_name: eurekaserver-ms
     ports:
       - "8070:8070"
@@ -301,7 +317,7 @@ services:
       OTEL_SERVICE_NAME: "eurekaserver"
 
   gatewayserver:
-    image: "galatex/gatewayserver:8.0"
+    image: "galatex/gatewayserver:9.0"
     container_name: gatewayserver-ms
     ports:
       - "8072:8072"
@@ -325,7 +341,7 @@ services:
       service: microservice-eureka-config
 
   accounts:
-    image: "galatex/accounts:8.0"
+    image: "galatex/accounts:9.0"
     container_name: accounts-ms
     healthcheck:
       test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
@@ -334,9 +350,7 @@ services:
       retries: 20
       start_period: 10s
     depends_on:
-      configserver:
-        condition: service_healthy
-      eurekaserver:
+      rabbit:
         condition: service_healthy
       accounts_db:
         condition: service_healthy
@@ -345,13 +359,13 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:mysql://accounts_db/accounts_db"
       SPRING_SQL_INIT_MODE: "always"
       OTEL_SERVICE_NAME: "accounts"
-
+      SPRING_RABBITMQ_HOST: "rabbit"
     extends:
       file: common-config.yml
       service: microservice-eureka-config
 
   loans:
-    image: "galatex/loans:8.0"
+    image: "galatex/loans:9.0"
     container_name: loans-ms
     healthcheck:
       test: "curl --fail --silent localhost:8090/actuator/health/readiness | grep UP || exit 1"
@@ -376,7 +390,7 @@ services:
       service: microservice-eureka-config
 
   cards:
-    image: "galatex/cards:8.0"
+    image: "galatex/cards:9.0"
     container_name: cards-ms
     healthcheck:
       test: "curl --fail --silent localhost:9000/actuator/health/readiness | grep UP || exit 1"
@@ -399,6 +413,20 @@ services:
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+
+  message:
+    image: "galatex/message:9.0"
+    container_name: message-ms
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    environment:
+      SPRING_RABBITMQ_HOST: "rabbit"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://cards_db/cards_db"
+      SPRING_SQL_INIT_MODE: "always"
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
 
 networks:
   eazyBank:
