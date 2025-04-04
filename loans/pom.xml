@@ -126,7 +126,7 @@
 				<version>3.4.2</version>
 				<configuration>
 					<to>
-						<image>galatex/${project.artifactId}:8.0</image>
+						<image>galatex/${project.artifactId}:9.0</image>
 					</to>
 				</configuration>
 			</plugin>

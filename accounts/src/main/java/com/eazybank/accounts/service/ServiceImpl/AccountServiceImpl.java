@@ -2,6 +2,7 @@ package com.eazybank.accounts.service.ServiceImpl;
 
 import com.eazybank.accounts.constants.AccountsConstants;
 import com.eazybank.accounts.dto.AccountsDto;
+import com.eazybank.accounts.dto.AccountsMsgDto;
 import com.eazybank.accounts.dto.CustomerDto;
 import com.eazybank.accounts.dtoMapper.AccountsMapper;
 import com.eazybank.accounts.entity.Accounts;
@@ -13,6 +14,9 @@ import com.eazybank.accounts.repository.AccountsRepository;
 import com.eazybank.accounts.repository.CustomerRepository;
 import com.eazybank.accounts.service.AccountsService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,8 +27,10 @@ import java.util.Random;
 @AllArgsConstructor
 public class AccountServiceImpl implements AccountsService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
     private final AccountsRepository accountsRepository;
     private final CustomerRepository customerRepository;
+    private final StreamBridge streamBridge;
 
     @Override
     public void createAccount(CustomerDto customerDto) {
@@ -37,10 +43,16 @@ public class AccountServiceImpl implements AccountsService {
         }
 
         Customer savedCustomer = customerRepository.save(customer);
-        var acc = createNewAccount(savedCustomer);
-        accountsRepository.save(acc);
-
-
+        Accounts savedAccount = createNewAccount(savedCustomer);
+        accountsRepository.save(savedAccount);
+        sendCommunication(savedAccount, savedCustomer);
+    }
+    private void sendCommunication(Accounts account, Customer customer) {
+        var accountsMsgDto = new AccountsMsgDto(account.getAccountNumber(), customer.getName(),
+                              customer.getEmail(), customer.getMobileNumber());
+        logger.info("Sending communication request for the details:{}", accountsMsgDto);
+        var result = streamBridge.send("sendCommunication-out-0", accountsMsgDto);
+        logger.info("Is the communication request successfully triggered?:{}", result);
     }
 
     private Accounts createNewAccount(Customer customer) {
@@ -96,6 +108,20 @@ public class AccountServiceImpl implements AccountsService {
         accountsRepository.deleteByCustomerId(customer.getCustomerId());
         customerRepository.deleteById(customer.getCustomerId());
         return true;
+    }
+
+    @Override
+    public boolean updateCommunicationStatus(Long accountNumber) {
+        boolean isUpdated = false;
+        if(accountNumber !=null ) {
+            Accounts accounts = accountsRepository.findById(accountNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Account", "AccountNumber", accountNumber.toString())
+            );
+            accounts.setCommunicationSw(true);
+            accountsRepository.save(accounts);
+            isUpdated = true;
+        }
+        return isUpdated;
     }
 
 
