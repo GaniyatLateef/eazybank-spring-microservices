@@ -99,7 +99,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-stream-binder-rabbit</artifactId>
+			<artifactId>spring-cloud-stream-binder-kafka</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.mysql</groupId>
@@ -146,7 +146,7 @@
 				<version>3.4.2</version>
 				<configuration>
 					<to>
-						<image>galatex/${project.artifactId}:9.0</image>
+						<image>galatex/${project.artifactId}:10.0</image>
 					</to>
 				</configuration>
 			</plugin>
