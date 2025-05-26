@@ -17,11 +17,10 @@ spring:
 
   config:
     import: "optional:configserver:http://localhost:8071/"
-  #rabbitmq:
-   # host: "localhost"
-    #port: 5672
-    #username: "guest"
-    #password: "guest"
+  cloud:
+    kubernetes:
+      discovery:
+        all-namespaces: true
 management:
   endpoints:
     web:
@@ -44,15 +43,6 @@ management:
   metrics:
     tags:
       application: I${spring.application.name}
-
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    fetchRegistry: true
-    registerWithEureka: true
-    serviceUrl:
-      defaultZone: http://localhost:8070/eureka/
 
 info:
   app:
